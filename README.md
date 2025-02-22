@@ -54,12 +54,22 @@ Este proyecto implementa un sistema RESTful que permite la gestión de carritos 
 
 ## Endpoints de la API
 
+### Productos
+- `POST /api/productos` → Crear un producto.
+- `GET /api/productos` → Consultar todos los productos.
+- `GET /api/productos/{productoId}` → Consultar producto por ID.
+
 ### Carrito de Compra (MongoDB)
-- `POST /carrito` → Agregar un carrito de compra.
-- `GET /carrito/{idUsuario}` → Obtener el carrito de compra de un usuario.
+- `POST /api/carritos` → Crear un carrito de compra.
+- `GET /api/carritos` → Consultar todos los carritos.
+- `GET /api/carritos/{usuarioId}` → Obtener el carrito de compra de un usuario.
+- `GET /api/carritos/productoById/{usuarioId}?productoId={productoId}` → Obtener un producto dentro del carrito de un usuario.
 
 ### Gestión de Compras (PostgreSQL)
-- `POST /compra` → Realizar una compra basándose en el carrito de un usuario.
+- `POST /api/ordenCompra` → Generar una orden de compra.
+- `GET /api/ordenCompra` → Consultar todas las órdenes de compra.
+- `GET /api/ordenCompra/{ordenCompraId}` → Consultar una orden de compra por ID.
+- `PATCH /api/productos/entregar/{ordenCompraId}` → Marcar una orden de compra como entregada.
 
 ## Ejecución Local del Proyecto
 
@@ -79,7 +89,7 @@ Este proyecto implementa un sistema RESTful que permite la gestión de carritos 
 4. Importar la colección de Postman (si se proporciona) o probar los endpoints directamente.
 
 ## Documentación y Pruebas
-- Swagger UI disponible en: `http://localhost:8080/swagger-ui.html`
+- Swagger UI disponible en: `http://localhost:8081/swagger-ui.html`
 - Pruebas unitarias ejecutables con:
    ```sh
    mvn test
