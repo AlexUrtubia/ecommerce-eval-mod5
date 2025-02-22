@@ -1,101 +1,87 @@
-# E-Commerce REST API
+# Proyecto E-commerce con Spring Boot, PostgreSQL y MongoDB
 
-Este proyecto es un sistema REST que permite la interacción con dos bases de datos diferentes:
-MongoDB y PostgreSQL. Su objetivo es gestionar carritos de compra en MongoDB y realizar
-transacciones de compra en PostgreSQL.
+Este proyecto implementa un sistema RESTful que permite la gestión de carritos de compra en MongoDB y la realización de transacciones de compra en PostgreSQL. Se incluyen pruebas unitarias, documentación con Javadoc y documentación de endpoints con Swagger.
 
-## Tecnologías utilizadas
-- **Spring Boot**
+## Tecnologías Utilizadas
+- **Spring Boot** (Spring Data, Spring Web, Spring Boot Starter Test)
 - **MongoDB** (para la gestión de carritos de compra)
-- **PostgreSQL** (para la gestión de transacciones y órdenes de compra)
-- **JPA y Hibernate**
+- **PostgreSQL** (para el registro de transacciones de compra)
 - **Swagger** (para la documentación de la API)
 - **JUnit y Mockito** (para pruebas unitarias)
 
-## Arquitectura del Proyecto
-El sistema está organizado en capas:
-- **Capa Modelo**: Define las entidades y documentos de la base de datos.
-- **Capa Repositorio**: Interfaz con la base de datos.
-- **Capa Servicio**: Contiene la lógica de negocio.
-- **Capa Controlador**: Define los endpoints de la API REST.
+## Esquema de Bases de Datos
 
-## Esquemas de Base de Datos
+### MongoDB (Colección `User` - Carrito de Compra)
+- **CarritoCompra**:
+  - `id`: String (Identificador del carrito)
+  - `idUsuario`: String (Identificador del usuario)
+  - `productos`: Lista de `ProductoCarrito`
 
-### MongoDB (Carrito de Compra)
-Colección: **CarritoCompra**
-```json
-{
-  "idUsuario": "String",
-  "productos": [
-    {
-      "id": "Integer",
-      "codigoProducto": "String"
-    }
-  ]
-}
-```
+### PostgreSQL (Tablas para la gestión de compras)
 
-### PostgreSQL (Gestión de Compras)
-- **Producto**
-  - id (Integer, PK)
-  - codigo_producto (String, único)
-  - precio_unitario (Integer)
-  - stock (Integer)
+#### Tabla `productos`
+- **Producto**:
+  - `id`: Integer (Identificador único)
+  - `codigoProducto`: String (Código único del producto)
+  - `precioUnitario`: Decimal (Precio unitario del producto)
+  - `stock`: Integer (Cantidad disponible en stock)
+  - `nombre`: String (Nombre del producto)
 
-- **OrdenCompra**
-  - id (Integer, PK)
-  - fecha_emision (Date)
-  - fecha_entrega (Date)
-  - fecha_solicitada (Date)
+#### Tabla `ordenes_compra`
+- **OrdenCompra**:
+  - `id`: Integer (Identificador único de la orden)
+  - `idUsuario`: String (Identificador del usuario que realiza la compra)
+  - `precioTotalCompra`: Decimal (Monto total de la compra)
+  - `fechaEmision`: Date (Fecha de emisión de la orden)
+  - `fechaEntrega`: Date (Fecha estimada de entrega)
+  - `fechaSolicitada`: Date (Fecha solicitada por el usuario)
+  - `estado`: Enum (Estado de la orden: PENDIENTE, EN_PROCESO, COMPLETADA, CANCELADA)
+  - `detalles`: Lista de `DetalleCompra`
 
-- **DetalleCompra**
-  - id (Integer, PK)
-  - codigo_producto (String, FK a Producto)
-  - cantidad (Integer)
-  - total_detalle (Integer)
+#### Tabla `detalles_compra`
+- **DetalleCompra**:
+  - `id`: Integer (Identificador único del detalle de compra)
+  - `codigoProducto`: String (Código del producto comprado)
+  - `cantidad`: Integer (Cantidad comprada del producto)
+  - `totalDetalle`: Decimal (Monto total por el producto en la compra)
+  - `ordenCompra`: Referencia a `OrdenCompra`
 
-## Endpoints
+#### Objeto `ProductoCarrito`
+- **ProductoCarrito**:
+  - `id`: Integer (Identificador del producto en el carrito)
+  - `codigoProducto`: String (Código del producto)
+  - `cantidad`: Integer (Cantidad agregada al carrito)
 
-### CarritoCompraController
-- **POST /carrito** - Agregar un carrito de compra
-- **GET /carrito/{idUsuario}** - Obtener carrito de compra por usuario
+## Endpoints de la API
 
-### CompraController
-- **POST /compra** - Generar una compra desde un carrito
+### Carrito de Compra (MongoDB)
+- `POST /carrito` → Agregar un carrito de compra.
+- `GET /carrito/{idUsuario}` → Obtener el carrito de compra de un usuario.
 
-## Ejecución del Proyecto
-### Prerrequisitos
+### Gestión de Compras (PostgreSQL)
+- `POST /compra` → Realizar una compra basándose en el carrito de un usuario.
+
+## Ejecución Local del Proyecto
+
+### Requisitos Previos
 - Java 17+
-- PostgreSQL y MongoDB en ejecución
-- Postman o cualquier herramienta para probar APIs
+- Maven
+- MongoDB en ejecución
+- PostgreSQL en ejecución con las tablas configuradas
 
-### Configuración
-1. Clonar el repositorio y navegar a la carpeta del proyecto.
-2. Configurar las credenciales de MongoDB y PostgreSQL en `application.properties`:
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/ecommerce
-   spring.datasource.username=tu_usuario
-   spring.datasource.password=tu_password
-   spring.data.mongodb.uri=mongodb://localhost:27017/ecommerce
-   ```
+### Pasos para la Ejecución
+1. Clonar el repositorio.
+2. Configurar las credenciales de MongoDB y PostgreSQL en `application.properties`.
 3. Ejecutar el proyecto con:
    ```sh
    mvn spring-boot:run
    ```
-4. Acceder a la documentación de la API en `http://localhost:8080/swagger-ui.html`.
+4. Importar la colección de Postman (si se proporciona) o probar los endpoints directamente.
 
-### Pruebas
-Para ejecutar pruebas unitarias:
-```sh
-mvn test
-```
-
-## Documentación
-El proyecto incluye documentación con:
-- **Javadoc** para describir clases y métodos.
-- **Swagger** para visualizar y probar los endpoints.
-
----
-Este proyecto demuestra el uso de múltiples bases de datos en una aplicación Spring Boot,
-incluyendo pruebas y documentación adecuada para facilitar su mantenimiento y escalabilidad.
+## Documentación y Pruebas
+- Swagger UI disponible en: `http://localhost:8080/swagger-ui.html`
+- Pruebas unitarias ejecutables con:
+   ```sh
+   mvn test
+   ```
 
