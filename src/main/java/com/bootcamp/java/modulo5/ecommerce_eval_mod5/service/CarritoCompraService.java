@@ -1,6 +1,7 @@
 package com.bootcamp.java.modulo5.ecommerce_eval_mod5.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,9 +43,13 @@ public class CarritoCompraService {
      */
     
     public CarritoCompra buscarCarritoPorIdUsuario(String idUsuario) {
-        return carritoCompraRepository.findByIdUsuario(idUsuario)
-                .orElseThrow(() -> new CarritoNoEncontradoException(idUsuario));
+        System.out.println("Buscando carrito para usuario: " + idUsuario);
+        Optional<CarritoCompra> carrito = carritoCompraRepository.findByIdUsuario(idUsuario);
+        System.out.println("Carrito encontrado: " + carrito);
+
+        return carrito.orElseThrow(() -> new CarritoNoEncontradoException(idUsuario));
     }
+
 
     /**
      * Busca un producto dentro del carrito de compras de un usuario.

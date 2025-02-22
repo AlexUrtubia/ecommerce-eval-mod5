@@ -18,6 +18,7 @@ import lombok.Setter;
 public class CarritoCompra {
 
     @Id
+    private String id;
     private String idUsuario;
     private List<ProductoCarrito> productos;
 }

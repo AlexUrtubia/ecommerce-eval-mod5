@@ -14,9 +14,11 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bootcamp.java.modulo5.ecommerce_eval_mod5.exception.OrdenCompraNotFoundException;
@@ -24,6 +26,7 @@ import com.bootcamp.java.modulo5.ecommerce_eval_mod5.models.DetalleCompra;
 import com.bootcamp.java.modulo5.ecommerce_eval_mod5.models.OrdenCompra;
 import com.bootcamp.java.modulo5.ecommerce_eval_mod5.repository.postgresql.OrdenCompraRepository;
 
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class OrdenCompraServiceTest {
 	 	@InjectMocks 
@@ -41,6 +44,7 @@ public class OrdenCompraServiceTest {
 	    @BeforeEach
 	    public void setUp() {
 	        MockitoAnnotations.openMocks(this);
+	        ordenCompraService = new OrdenCompraService(ordenCompraRepository, carritoCompraService, productoService);
 	    }
 	    
 	    // Test para calcularTotalCompra
