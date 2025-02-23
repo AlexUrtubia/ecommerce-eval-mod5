@@ -4,7 +4,7 @@ public class ProductoCarritoByIdNoEncontradoException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public ProductoCarritoByIdNoEncontradoException(Integer productoId) {
-		super("Producto no encontrado con id: " + productoId);
+	public ProductoCarritoByIdNoEncontradoException(Integer idProductoCarrito) {
+		super("Producto no encontrado con id: " + idProductoCarrito);
 	}
 }
